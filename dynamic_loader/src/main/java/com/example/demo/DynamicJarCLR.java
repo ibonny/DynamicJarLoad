@@ -38,16 +38,18 @@ public class DynamicJarCLR implements CommandLineRunner {
          * myJarFile.close();
          */
 
-        URLClassLoader child = new URLClassLoader(new URL[] { new URL("file://./target/demo-0.0.1-SNAPSHOT.jar") },
-                this.getClass().getClassLoader());
+        URLClassLoader child = new URLClassLoader(
+            new URL[] { new URL("file:///workspace/DynamicJarLoad/basic_jar/target/demo-0.0.1-SNAPSHOT.jar") },
+            this.getClass().getClassLoader()
+        );
 
-        Class<?> classToLoad = Class.forName("com.example.demo.DynamicJarCLR", true, child);
+        Class<?> classToLoad = Class.forName("com.example.demo.BasicJarImpl", true, child);
 
         Method method = classToLoad.getDeclaredMethod("apiFunction");
 
         Object instance = classToLoad.getDeclaredConstructor().newInstance();
 
-        if (!(instance instanceof DynamicJarCLR)) {
+        if (!(instance instanceof BasicJar)) {
             System.out.println("Wrong instance type.");
 
             System.exit(0);
@@ -55,7 +57,7 @@ public class DynamicJarCLR implements CommandLineRunner {
 
         Object result = method.invoke(instance);
 
-        String result2 = ((DynamicJarCLR) instance).apiFunction();
+        String result2 = ((BasicJar) instance).apiFunction();
 
         System.out.println("Result is: " + result);
         System.out.println("Result2 is: " + result2);
